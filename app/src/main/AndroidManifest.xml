@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.samuelbernard147.moviecataloguelocalstorage">
 
+    <permission
+        android:name="com.samuelbernard147.moviecataloguelocalstorage.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.samuelbernard147.moviecataloguelocalstorage.WRITE_DATABASE"
+        android:protectionLevel="normal" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -22,6 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <provider
+            android:name=".provider.FavouriteProvider"
+            android:authorities="com.samuelbernard147.moviecataloguelocalstorage"
+            android:exported="true"
+            android:readPermission="com.samuelbernard147.moviecataloguelocalstorage.READ_DATABASE"
+            android:writePermission="com.samuelbernard147.moviecataloguelocalstorage.WRITE_DATABASE" />
+
+    </application>
 </manifest>

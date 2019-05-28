@@ -1,6 +1,5 @@
 package com.samuelbernard147.moviecataloguelocalstorage.fragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +47,7 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
     FavHelper favHelper;
 
     //    Query search
-    public static String queryTvFav;
+    String queryTvFav;
 
     private SettingsPreference mSettingPreference;
 
@@ -80,6 +79,7 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
         if (getActivity() != null) {
             mSettingPreference = new SettingsPreference(getActivity());
         }
+        favHelper = FavHelper.getInstance(getActivity());
 
 //        Recyclerview
         recyclerViewFavTv = view.findViewById(R.id.rv_fav_tv);
@@ -95,9 +95,6 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
 //      Inisiasi dari Loader
         getLoaderManager().initLoader(3, bundle, FavTvShowFragment.this);//
 
-        favHelper = FavHelper.getInstance(getActivity());
-        favHelper.open();
-
         refresh = view.findViewById(R.id.refresh_fav_tv);
         refresh.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -107,11 +104,10 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
                     @Override
                     public void run() {
                         queryTvFav = null;
-                        refresh.setRefreshing(false);
                         getLoaderManager().destroyLoader(3);
                         getLoaderManager().initLoader(3, bundle, FavTvShowFragment.this);//
                     }
-                }, 2000);
+                }, 1000);
             }
         });
     }
@@ -159,7 +155,7 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
                 Intent i = new Intent(getActivity(), DetailActivity.class);
                 i.putExtra(DetailActivity.EXTRA_ID, selectedTv.getId());
                 i.putExtra(DetailActivity.EXTRA_LANG, language);
-                i.putExtra(DetailActivity.EXTRA_TYPE, selectedTv.TYPE_TV);
+                i.putExtra(DetailActivity.EXTRA_TYPE, TYPE_TV);
                 startActivity(i);
             }
         });
@@ -170,7 +166,7 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
         super.onStop();
         favTvAdapter.clearListMovie();
         favTvAdapter.notifyDataSetChanged();
-        getLoaderManager().restartLoader(3, bundle, FavTvShowFragment.this);
+        refreshLoader(3);
     }
 
     @Override
@@ -178,20 +174,20 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
         super.onResume();
         favTvAdapter.clearListMovie();
         favTvAdapter.notifyDataSetChanged();
-        getLoaderManager().restartLoader(3, bundle, FavTvShowFragment.this);
+        refreshLoader(3);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         favTvAdapter.clearListMovie();
-        getLoaderManager().destroyLoader(3);
-        favHelper.close();
+        stopLoader(3);
     }
 
     @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int i, @Nullable Bundle args) {
+        favHelper.open();
 //        Menentukan bahasa
         String lang = mSettingPreference.getLang();
         if (lang != null) {
@@ -211,18 +207,27 @@ public class FavTvShowFragment extends Fragment implements LoaderManager.LoaderC
         progressBarFavTv.setVisibility(View.INVISIBLE);
         tvLoading.setVisibility(View.INVISIBLE);
 
-        if (queryTvFav != null && tvShows.size() <= 0) {
+        if (refresh != null) {
+            refresh.setRefreshing(false);
+        }
+
+        if (queryTvFav != null && !queryTvFav.equals("") && tvShows.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.not_found), Toast.LENGTH_SHORT).show();
             tvNone.setVisibility(View.INVISIBLE);
-        } else if (queryTvFav == null && tvShows.size() <= 0) {
+        } else if (tvShows.size() <= 0) {
             tvNone.setVisibility(View.VISIBLE);
         } else {
             tvNone.setVisibility(View.INVISIBLE);
         }
+        favHelper.close();
     }
 
     void stopLoader(int id) {
         getLoaderManager().destroyLoader(id);
+    }
+
+    void refreshLoader(int id) {
+        getLoaderManager().restartLoader(id, bundle, FavTvShowFragment.this);
     }
 
     @Override

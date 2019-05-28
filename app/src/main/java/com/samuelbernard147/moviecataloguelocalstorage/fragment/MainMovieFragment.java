@@ -102,11 +102,10 @@ public class MainMovieFragment extends Fragment implements LoaderManager.LoaderC
                     @Override
                     public void run() {
                         querySearch = null;
-                        refresh.setRefreshing(false);
                         getLoaderManager().destroyLoader(0);
                         getLoaderManager().initLoader(0, bundle, MainMovieFragment.this);
                     }
-                },2000);
+                },1000);
             }
         });
     }
@@ -189,9 +188,13 @@ public class MainMovieFragment extends Fragment implements LoaderManager.LoaderC
         progressBarMovie.setVisibility(View.INVISIBLE);
         tvLoading.setVisibility(View.INVISIBLE);
 
-        if (querySearch!= null && movies.size() <= 0) {
+        if (refresh != null){
+            refresh.setRefreshing(false);
+        }
+
+        if (querySearch!= null && querySearch.length() > 0 && movies.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.not_found), Toast.LENGTH_SHORT).show();
-        } else if (querySearch== null && movies.size() <= 0) {
+        } else if (querySearch == null && movies.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.fail), Toast.LENGTH_SHORT).show();
         }
     }

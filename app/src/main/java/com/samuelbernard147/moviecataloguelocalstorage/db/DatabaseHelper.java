@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.samuelbernard147.moviecataloguelocalstorage.db.DatabaseContract.FavColumns.TABLE_NAME;
-
 class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "dbfavourite";
@@ -19,7 +17,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL)",
-            TABLE_NAME,
+            DatabaseContract.FavColumns.TABLE_NAME,
             DatabaseContract.FavColumns._ID,
             DatabaseContract.FavColumns.FAVID,
             DatabaseContract.FavColumns.TITLE,
@@ -42,8 +40,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         /*
         Drop table tidak dianjurkan ketika proses migrasi terjadi dikarenakan data user akan hilang,
         */
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.FavColumns.TABLE_NAME);
         onCreate(db);
     }
 }
-

@@ -29,6 +29,7 @@ public class FavouriteFragment extends Fragment {
     }
 
     public void setQuery(String query) {
+        bundle = new Bundle();
         bundle.putString("query", query);
         setupAdapter();
     }
@@ -43,7 +44,6 @@ public class FavouriteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bundle = new Bundle();
 
         mViewPager = view.findViewById(R.id.vp_fav);
         setupAdapter();

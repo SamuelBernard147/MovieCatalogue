@@ -165,4 +165,24 @@ public class FavHelper {
     public int deleteFav(int id) {
         return database.delete(TABLE_NAME, FAVID + " = '" + id + "'", null);
     }
+
+    /*
+     * Method dibawah ini untuk content provider
+     */
+
+    /*
+     * Mengambil semua data di provider
+     * @param type (movie/tv)
+     * @return cursor hasil query
+     */
+    public Cursor queryProvider(String type) {
+        return database.query(DATABASE_TABLE,
+                null,
+                TYPE + " LIKE ?",
+                new String[]{type},
+                null,
+                null,
+                _ID + " ASC",
+                null);
+    }
 }

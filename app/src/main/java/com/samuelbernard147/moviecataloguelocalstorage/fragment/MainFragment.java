@@ -28,6 +28,7 @@ public class MainFragment extends Fragment {
     }
 
     public void setQuery(String query) {
+        bundle = new Bundle();
         bundle.putString("query", query);
         setupAdapter();
     }
@@ -42,7 +43,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bundle = new Bundle();
 
         mViewPager = view.findViewById(R.id.vp_movie);
         setupAdapter();

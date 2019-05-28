@@ -102,11 +102,10 @@ public class MainTvShowFragment extends Fragment implements LoaderManager.Loader
                     @Override
                     public void run() {
                         querySearch = null;
-                        refresh.setRefreshing(false);
                         getLoaderManager().destroyLoader(1);
                         getLoaderManager().initLoader(1, bundle, MainTvShowFragment.this);
                     }
-                },2000);
+                },1000);
             }
         });
     }
@@ -189,7 +188,11 @@ public class MainTvShowFragment extends Fragment implements LoaderManager.Loader
         progressBarTv.setVisibility(View.INVISIBLE);
         tvLoading.setVisibility(View.INVISIBLE);
 
-        if (querySearch != null && tv.size() <= 0) {
+        if (refresh != null){
+            refresh.setRefreshing(false);
+        }
+
+        if (querySearch != null && querySearch.length() > 0 && tv.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.not_found), Toast.LENGTH_SHORT).show();
         } else if (querySearch == null && tv.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.fail), Toast.LENGTH_SHORT).show();

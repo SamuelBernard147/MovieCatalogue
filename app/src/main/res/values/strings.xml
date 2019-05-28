@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--Bahasa Inggris-->
 <resources>
-    <string name="app_name">MovieCatalogue(LocalStorage)</string>
+    <string name="app_name">MovieCatalogue</string>
 
     <!--Tab Fragment Title-->
     <string name="title_movie">Movies</string>

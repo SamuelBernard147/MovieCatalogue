@@ -10,12 +10,20 @@ public class Movie implements Parcelable {
     private String title;
     private String poster;
     private String overview;
+    private String type;
 
     public static final String TYPE_MOVIE = "movie";
     public static final String TYPE_TV = "tv";
 
     public Movie() {
+    }
 
+    public Movie(int id, String title, String poster, String overview, String type) {
+        this.id = id;
+        this.title = title;
+        this.poster = poster;
+        this.overview = overview;
+        this.type = type;
     }
 
     /*
@@ -91,6 +99,14 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     //  Parcelable
     @Override
     public int describeContents() {
@@ -103,6 +119,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.poster);
         dest.writeString(this.overview);
+        dest.writeString(this.type);
     }
 
     private Movie(Parcel in) {
@@ -110,6 +127,7 @@ public class Movie implements Parcelable {
         this.title = in.readString();
         this.poster = in.readString();
         this.overview = in.readString();
+        this.type = in.readString();
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

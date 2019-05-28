@@ -48,7 +48,7 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
     FavHelper favHelper;
 
     //    Query search
-    public static String queryMovieFav;
+    String queryMovieFav;
 
     private SettingsPreference mSettingPreference;
 
@@ -80,6 +80,7 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
         if (getActivity() != null) {
             mSettingPreference = new SettingsPreference(getActivity());
         }
+        favHelper = FavHelper.getInstance(getActivity());
 
 //        Recyclerview
         recyclerViewFavMovie = view.findViewById(R.id.rv_fav_movie);
@@ -95,9 +96,6 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
 //      Inisiasi dari Loader
         getLoaderManager().initLoader(2, bundle, FavMovieFragment.this);//
 
-        favHelper = FavHelper.getInstance(getActivity());
-        favHelper.open();
-
         refresh = view.findViewById(R.id.refresh_fav_movie);
         refresh.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -107,11 +105,10 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void run() {
                         queryMovieFav = null;
-                        refresh.setRefreshing(false);
                         getLoaderManager().destroyLoader(2);
                         getLoaderManager().initLoader(2, bundle, FavMovieFragment.this);
                     }
-                },2000);
+                }, 1000);
             }
         });
     }
@@ -170,7 +167,7 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
         super.onStop();
         favMovieAdapter.clearListMovie();
         favMovieAdapter.notifyDataSetChanged();
-        getLoaderManager().restartLoader(2, bundle, FavMovieFragment.this);
+        refreshLoader(2);
     }
 
     @Override
@@ -178,21 +175,20 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
         super.onResume();
         favMovieAdapter.clearListMovie();
         favMovieAdapter.notifyDataSetChanged();
-        getLoaderManager().restartLoader(2, bundle, FavMovieFragment.this);
-
+        refreshLoader(2);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         favMovieAdapter.clearListMovie();
-        getLoaderManager().destroyLoader(2);
-        favHelper.close();
+        stopLoader(2);
     }
 
     @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int i, @Nullable Bundle args) {
+        favHelper.open();
 //        Menentukan bahasa
         String lang = mSettingPreference.getLang();
         if (lang != null) {
@@ -212,18 +208,27 @@ public class FavMovieFragment extends Fragment implements LoaderManager.LoaderCa
         progressBarFavMovie.setVisibility(View.INVISIBLE);
         tvLoading.setVisibility(View.INVISIBLE);
 
-        if (queryMovieFav != null && movies.size() <= 0) {
+        if (refresh != null) {
+            refresh.setRefreshing(false);
+        }
+
+        if (queryMovieFav != null && !queryMovieFav.equals("") && movies.size() <= 0) {
             Toast.makeText(getActivity(), getResources().getString(R.string.not_found), Toast.LENGTH_SHORT).show();
             tvNone.setVisibility(View.INVISIBLE);
-        } else if (queryMovieFav == null && movies.size() <= 0) {
+        } else if (movies.size() <= 0) {
             tvNone.setVisibility(View.VISIBLE);
         } else {
             tvNone.setVisibility(View.INVISIBLE);
         }
+        favHelper.close();
     }
 
     void stopLoader(int id) {
         getLoaderManager().destroyLoader(id);
+    }
+
+    void refreshLoader(int id) {
+        getLoaderManager().restartLoader(id, bundle, FavMovieFragment.this);
     }
 
     @Override

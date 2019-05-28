@@ -150,12 +150,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        favHelper.open();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         favHelper.close();

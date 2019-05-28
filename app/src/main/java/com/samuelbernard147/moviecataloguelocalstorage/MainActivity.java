@@ -21,7 +21,6 @@ import com.samuelbernard147.moviecataloguelocalstorage.fragment.MainFragment;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
     BottomNavigationView navigation;
     TabFragmentAdapter adapter;
     ViewPager viewPagerMain;
