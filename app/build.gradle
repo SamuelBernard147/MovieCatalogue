@@ -11,9 +11,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 //        URL
-        buildConfigField("String", "TMDB_API_KEY",'"be4808a7b6d2d8684012bc817583647d"')
-        buildConfigField("String", "TMDB_URL_POPULAR",'"https://api.themoviedb.org/3/discover/"')
-        buildConfigField("String", "TMDB_URL_SEARCH",'"https://api.themoviedb.org/3/search/"')
+        buildConfigField("String", "TMDB_API_KEY", '"be4808a7b6d2d8684012bc817583647d"')
+        buildConfigField("String", "TMDB_URL_POPULAR", '"https://api.themoviedb.org/3/discover/"')
+        buildConfigField("String", "TMDB_URL_SEARCH", '"https://api.themoviedb.org/3/search/"')
 
     }
     buildTypes {
